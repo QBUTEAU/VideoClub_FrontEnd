@@ -11,8 +11,9 @@
         <div class="burger-icon" @click="toggleMenu">
             <i class="fa fa-bars"></i>
         </div>
-        <div class="profil" to="/" @click.prevent="toggleProfilePopup"><i class="fa-solid fa-user"
-                style="color: #f1f1f1;"></i></div>
+        <div class="profil" to="/" @click.prevent="toggleProfilePopup">
+            <i class="fa-solid fa-user" style="color: #f1f1f1;"></i>
+        </div>
         <div class="burger-menu" v-if="isMenuOpen">
             <ul>
                 <li><router-link to="/" @click="toggleMenu">Accueil</router-link></li>
@@ -29,9 +30,6 @@
 </template>
 
 <script>
-
-import auth from '@/services/auth';
-
 export default {
     data() {
         return {
@@ -47,10 +45,9 @@ export default {
             this.isProfilePopupOpen = !this.isProfilePopupOpen;
         },
         logout() {
-            auth.logout();
-            this.$router.push('/login');
-        }
-
+            localStorage.removeItem('jwt_token'); // Remove the JWT token from local storage
+            this.$router.push('/login'); // Redirect to the login page
+        },
     }
 };
 </script>

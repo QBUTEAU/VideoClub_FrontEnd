@@ -14,9 +14,9 @@
             </div>
 
             <div class="pagination">
-                <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">Précédent</button>
+                <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">Précédente</button>
                 <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-                <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">Suivant</button>
+                <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">Suivante</button>
             </div>
 
             <div class="movie__list">
@@ -24,9 +24,9 @@
             </div>
 
             <div class="pagination">
-                <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">Précédent</button>
+                <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">Précédente</button>
                 <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-                <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">Suivant</button>
+                <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">Suivante</button>
             </div>
         </div>
     </div>
@@ -72,9 +72,25 @@ export default {
         }
     },
     methods: {
+        getToken() {
+            return localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+        },
+        redirectToLogin() {
+            this.$router.push('/login'); // Redirection vers la page de login si pas de token
+        },
         async fetchMovies() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin(); // Redirection si pas de token
+                return;
+            }
+
             try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/movies?pagination=false');
+                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/movies?pagination=false', {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Ajout du token JWT dans les en-têtes
+                    }
+                });
                 this.movies = response.data['hydra:member'];
 
                 // Trier les films par date de création
@@ -82,6 +98,9 @@ export default {
                 console.log('Total movies fetched:', this.movies.length);
             } catch (error) {
                 console.error('Error fetching movies:', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin(); // Redirection si l'authentification échoue
+                }
             }
         },
         handleMovieAdded(newMovie) {

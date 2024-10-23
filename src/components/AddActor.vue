@@ -85,11 +85,25 @@ export default {
     },
     methods: {
         async fetchFilms() {
+            const token = localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+            if (!token) {
+                this.redirectToLogin(); // Rediriger si pas de token
+                return;
+            }
+
             try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/movies');
+                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/movies', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                 this.films = response.data['hydra:member'];
             } catch (error) {
-                console.error('Error fetching films:', error);
+                console.error('Erreur lors de la récupération des films :', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                }
             }
         },
 
@@ -98,6 +112,12 @@ export default {
         },
 
         async addActor() {
+            const token = localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
+
             const actorData = {
                 firstname: this.actor.firstname.trim(),
                 lastname: this.actor.lastname.trim(),
@@ -108,7 +128,7 @@ export default {
                 gender: this.actor.gender,
                 bio: this.actor.bio.trim(),
                 awards: this.actor.awards || 0,
-                movies: this.selectedFilms.map(id => `/api/movies/${id}`)  // Convertir en IRI
+                movies: this.selectedFilms.map(id => `/api/movies/${id}`)
             };
 
             if (!actorData.lastname || !actorData.dob || !actorData.nationality) {
@@ -117,34 +137,31 @@ export default {
             }
 
             try {
-                const response = await axios.post('http://symfony.mmi-troyes.fr:8319/api/actors', actorData);
+                const response = await axios.post('http://symfony.mmi-troyes.fr:8319/api/actors', actorData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                 console.log('Actor added successfully:', response.data);
 
-                // Afficher la confirmation
                 const confirmation = confirm(`L'acteur ${actorData.firstname} ${actorData.lastname} a bien été ajouté.\nVoulez-vous continuer ?`);
                 if (confirmation) {
-                    this.$emit('actor-added', response.data); // Émettre l'événement avec l'acteur ajouté
-                    this.resetForm(); // Réinitialiser le formulaire après ajout
+                    this.$emit('actor-added', response.data);
+                    window.location.reload();
                 }
             } catch (error) {
-                console.error('Error adding actor:', error.response ? error.response.data : error);
-                alert(`Une erreur est survenue lors de l'ajout de l'acteur. Veuillez réessayer.`);
+                console.error('Erreur lors de l\'ajout de l\'acteur :', error.response ? error.response.data : error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                } else {
+                    alert('Une erreur est survenue lors de l\'ajout de l\'acteur. Veuillez réessayer.');
+                }
             }
         },
 
-        resetForm() {
-            this.actor = {
-                firstname: '',
-                lastname: '',
-                media: '',
-                dob: '',
-                deathDate: '',
-                nationality: '',
-                gender: '',
-                bio: '',
-                awards: 0
-            };
-            this.selectedFilms = [];
+        redirectToLogin() {
+            this.$router.push('/login');
         }
     }
 };

@@ -8,6 +8,9 @@
         </div>
 
         <div v-if="!editMode">
+            <div class="back-button">
+                <button @click="goToMovies">← Retour</button>
+            </div>
             <h2 class="about">À propos du film :</h2>
             <div class="film" v-if="movie">
                 <div class="film__img" :style="{ backgroundImage: 'url(' + movie.media + ')' }">
@@ -33,7 +36,6 @@
                             v-if="movie.updatedAt"> - Mis à jour le {{ formatDate(movie.updatedAt) }}</span></p>
                     <div class="crud">
                         <i class="fa-solid fa-pen-to-square" @click="toggleEditMode"></i>
-                        <!-- Icône de suppression avec confirmation dynamique -->
                         <i class="fa-solid fa-trash" @click="confirmDeleteMovie"></i>
                     </div>
                 </div>
@@ -54,7 +56,7 @@
 import axios from 'axios';
 import Header from '@/components/Header.vue';
 import ActorCard from '@/components/ActorCard.vue';
-import EditMovie from '@/components/EditMovie.vue'; // Importation du nouveau composant
+import EditMovie from '@/components/EditMovie.vue';
 
 export default {
     name: 'MovieDetails',
@@ -63,36 +65,58 @@ export default {
         movie: null,
         categories: [],
         actors: [],
-        editMode: false, // Contrôle du mode d'édition
+        editMode: false,
     }),
     created() {
         this.fetchMovieDetails();
     },
     methods: {
+        getToken() {
+            return localStorage.getItem('jwt_token'); // Retrieve the JWT token from localStorage
+        },
+        redirectToLogin() {
+            this.$router.push('/login'); // Redirect to login if the token is not present
+        },
+        goToMovies() {
+            this.$router.push('/movies'); // Redirige vers la page des acteurs
+        },
         async fetchMovieDetails() {
             const movieId = this.$route.params.id;
+            const token = this.getToken(); // Get the token
+
+            if (!token) {
+                this.redirectToLogin(); // Redirect to login if no token
+                return;
+            }
+
             try {
-                const response = await axios.get(`http://symfony.mmi-troyes.fr:8319/api/movies/${movieId}`);
+                const response = await axios.get(`http://symfony.mmi-troyes.fr:8319/api/movies/${movieId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` } // Include the token in the request headers
+                });
                 this.movie = response.data;
 
                 // Fetch categories details
                 const categoryPromises = this.movie.categories.map((url) =>
-                    axios.get(`http://symfony.mmi-troyes.fr:8319${url}`)
+                    axios.get(`http://symfony.mmi-troyes.fr:8319${url}`, {
+                        headers: { 'Authorization': `Bearer ${token}` } // Include the token for category requests
+                    })
                 );
                 const categoryResponses = await Promise.all(categoryPromises);
                 this.categories = categoryResponses.map((res) => res.data);
 
                 // Fetch actors details
                 const actorPromises = this.movie.actors.map((url) =>
-                    axios.get(`http://symfony.mmi-troyes.fr:8319${url}`)
+                    axios.get(`http://symfony.mmi-troyes.fr:8319${url}`, {
+                        headers: { 'Authorization': `Bearer ${token}` } // Include the token for actor requests
+                    })
                 );
                 const actorResponses = await Promise.all(actorPromises);
                 this.actors = actorResponses.map((res) => res.data);
             } catch (error) {
                 console.error('Error fetching movie details:', error);
+                alert('Une erreur est survenue lors de la récupération des détails du film.');
             }
         },
-        // Formater la date pour l'affichage
         formatDate(dateString) {
             return new Date(dateString).toLocaleDateString(undefined, {
                 year: 'numeric',
@@ -103,54 +127,63 @@ export default {
         getCategoryText(count) {
             return count === 1 ? 'Catégorie' : 'Catégories';
         },
-        // Bascule le mode édition
         toggleEditMode() {
             this.editMode = !this.editMode;
         },
-        // Génère la date actuelle au format "7 octobre 2024"
         getCurrentDate() {
             const today = new Date();
             const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois sur 2 chiffres
-            const dd = String(today.getDate()).padStart(2, '0'); // Jour sur 2 chiffres
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
             return `${yyyy}-${mm}-${dd}`;
         },
-        // Méthode appelée lors de la soumission du formulaire
         async submitForm(updatedMovie) {
             const movieId = this.$route.params.id;
-            // Ajouter la date actuelle dans updatedAt
             updatedMovie.updatedAt = this.getCurrentDate();
+            const token = this.getToken(); // Get the token for the PUT request
+
+            if (!token) {
+                this.redirectToLogin(); // Redirect to login if no token
+                return;
+            }
 
             try {
-                // PUT request pour modifier le film
-                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/movies/${movieId}`, updatedMovie);
+                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/movies/${movieId}`, updatedMovie, {
+                    headers: { 'Authorization': `Bearer ${token}` } // Include the token in the request headers
+                });
                 alert(`Le film a bien été modifié.`);
-                this.editMode = false; // Désactive le mode d'édition
-                this.fetchMovieDetails(); // Recharge les détails du film après modification
+                this.editMode = false;
+                this.fetchMovieDetails(); // Reload movie details after modification
             } catch (error) {
                 console.error('Error updating movie:', error);
                 alert('Une erreur est survenue lors de la modification du film.');
             }
         },
-        // Annule l'édition et revient aux détails du film
         cancelEdit() {
             this.editMode = false;
-            this.fetchMovieDetails(); // Recharge les détails d'origine du film
+            this.fetchMovieDetails(); // Reload original movie details
         },
-        // Méthode pour confirmer et supprimer le film
         async confirmDeleteMovie() {
             const isConfirmed = confirm('Êtes-vous sûr de vouloir supprimer ce film ?');
             if (isConfirmed) {
                 this.deleteMovie();
             }
         },
-        // Méthode pour supprimer le film
         async deleteMovie() {
             const movieId = this.$route.params.id;
+            const token = this.getToken(); // Get the token for the DELETE request
+
+            if (!token) {
+                this.redirectToLogin(); // Redirect to login if no token
+                return;
+            }
+
             try {
-                await axios.delete(`http://symfony.mmi-troyes.fr:8319/api/movies/${movieId}`);
+                await axios.delete(`http://symfony.mmi-troyes.fr:8319/api/movies/${movieId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` } // Include the token in the request headers
+                });
                 alert(`Le film a bien été supprimé.`);
-                this.$router.push('/movies'); // Redirige vers la page des films après suppression
+                this.$router.push('/movies'); // Redirect to movies page after deletion
             } catch (error) {
                 console.error('Error deleting movie:', error);
                 alert(`Une erreur est survenue lors de la suppression du film. Veuillez réessayer.`);

@@ -2,8 +2,8 @@
     <div class="login">
         <h2>Connexion</h2>
         <form class="form" @submit.prevent="login">
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" v-model="username" required />
+            <label for="email">Email :</label>
+            <input type="email" v-model="email" required />
 
             <label for="password">Mot de passe :</label>
             <input type="password" v-model="password" required />
@@ -14,20 +14,47 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            username: '',
-            password: ''
+            email: '',
+            password: '',
+            successMessage: false
         };
     },
     methods: {
-        login() {
-            if (this.username === 'admin' && this.password === 'wr505d') {
-                localStorage.setItem('isAuthenticated', 'true');
-                this.$router.push('/');
-            } else {
-                alert('Le nom d\'utilisateur ou le mot de passe est incorrect.');
+        async login() {
+            try {
+                const response = await axios.post('http://symfony.mmi-troyes.fr:8319/auth', {
+                    email: this.email,
+                    password: this.password
+                });
+
+                const data = response.data;
+
+                if (response.status === 200) {
+                    // Supposons que le token est dans data.token
+                    const token = data.token;
+
+                    // Stocker le token dans le localStorage avec une expiration d'une heure
+                    const expirationTime = new Date().getTime() + 3600 * 1000; // 1 heure en millisecondes
+                    localStorage.setItem('jwt_token', token);
+                    localStorage.setItem('tokenExpiration', expirationTime);
+
+                    // Afficher la boîte de dialogue de confirmation
+                    const confirmed = confirm('Connexion réussie ! Voulez-vous continuer ?');
+                    if (confirmed) {
+                        this.$router.push('/');
+                    }
+                } else {
+                    // Gérer les erreurs de connexion
+                    alert(data.message || 'Échec de la connexion');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la connexion', error);
+                alert('Erreur de connexion');
             }
         }
     }

@@ -14,9 +14,9 @@
             </div>
 
             <div class="pagination">
-                <button @click="prevPage" :disabled="currentPage === 1">Précédent</button>
+                <button @click="prevPage" :disabled="currentPage === 1">Précédente</button>
                 <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-                <button @click="nextPage" :disabled="currentPage === totalPages">Suivant</button>
+                <button @click="nextPage" :disabled="currentPage === totalPages">Suivante</button>
             </div>
 
             <div class="actor__list">
@@ -24,9 +24,9 @@
             </div>
 
             <div class="pagination">
-                <button @click="prevPage" :disabled="currentPage === 1">Précédent</button>
+                <button @click="prevPage" :disabled="currentPage === 1">Précédente</button>
                 <span>Page {{ currentPage }} sur {{ totalPages }}</span>
-                <button @click="nextPage" :disabled="currentPage === totalPages">Suivant</button>
+                <button @click="nextPage" :disabled="currentPage === totalPages">Suivante</button>
             </div>
         </div>
     </div>
@@ -37,12 +37,13 @@ import axios from 'axios';
 import Header from "@/components/Header.vue";
 import ActorCard from "@/components/ActorCard.vue";
 import AddActor from "@/components/AddActor.vue";
+import { useRouter } from 'vue-router';
 
 export default {
     components: {
         Header,
         ActorCard,
-        AddActor // Enregistrer le composant
+        AddActor
     },
     data() {
         return {
@@ -50,7 +51,7 @@ export default {
             searchTerm: '',
             currentPage: 1,
             actorsPerPage: 20,
-            showAddActorForm: false // Ajout de la variable pour contrôler l'affichage du formulaire
+            showAddActorForm: false
         };
     },
     created() {
@@ -74,16 +75,49 @@ export default {
     },
     methods: {
         async fetchActors() {
+            const token = localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+            if (!token) {
+                this.redirectToLogin(); // Rediriger si pas de token
+                return;
+            }
+
             try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/actors');
+                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/actors', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Ajouter le token dans les en-têtes
+                        'Content-Type': 'application/json'
+                    }
+                });
                 this.actors = response.data['hydra:member'];
             } catch (error) {
                 console.error('Erreur lors de la récupération des acteurs :', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin(); // Rediriger si session expirée (401)
+                }
             }
         },
-        handleActorAdded(newActor) {
-            this.actors.push(newActor); // Ajouter l'acteur à la liste existante
-            this.showAddActorForm = false; // Cacher le formulaire après ajout
+        async handleActorAdded(newActor) {
+            const token = localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+            if (!token) {
+                this.redirectToLogin(); // Rediriger si pas de token
+                return;
+            }
+
+            try {
+                const response = await axios.post('http://symfony.mmi-troyes.fr:8319/api/actors', newActor, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Ajouter le token dans les en-têtes
+                        'Content-Type': 'application/json'
+                    }
+                });
+                this.actors.push(response.data); // Ajouter l'acteur retourné à la liste existante
+                this.showAddActorForm = false; // Masquer le formulaire après l'ajout
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout de l\'acteur :', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin(); // Rediriger si session expirée (401)
+                }
+            }
         },
         toggleAddActorForm() {
             this.showAddActorForm = !this.showAddActorForm; // Bascule l'état d'affichage
@@ -99,6 +133,9 @@ export default {
                 this.currentPage--;
                 window.scrollTo(0, 0); // Remonter en haut de la page
             }
+        },
+        redirectToLogin() {
+            this.$router.push('/login'); // Redirection vers la page de connexion
         }
     }
 };

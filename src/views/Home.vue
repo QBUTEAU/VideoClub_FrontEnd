@@ -2,10 +2,7 @@
     <div>
         <Header />
         <main class="home__main">
-            <h1>Bienvenue dans mon vidéo-club !</h1>
-            <p>Je suis Quentin et je vous propose de découvrir quelques films,
-                des acteurs et des genres cinématographiques (tout est fictif, merci FakerProvider).
-            </p>
+            <h1>Bienvenue dans le vidéo-club MMI !</h1>
         </main>
         <h2>Voici les 4 films les plus récents :</h2>
         <div class="movie__list" v-if="latestMovies.length">
@@ -49,26 +46,42 @@ export default {
         this.fetchLatestActors();
     },
     methods: {
-        async fetchLatestMovies() {
-            try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/movies');
-                const movies = response.data['hydra:member'];
-                movies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
-                this.latestMovies = movies.slice(0, 4);
-            } catch (error) {
-                console.error('Derniers FILMS : Error :', error);
-            }
+        fetchLatestMovies() {
+            const token = localStorage.getItem('jwt_token'); // Récupérer le token du localStorage
+            axios.get("http://symfony.mmi-troyes.fr:8319/api/movies", {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Ajouter le token dans l'en-tête Authorization
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then((response) => {
+                    this.latestMovies = response.data["hydra:member"]
+                        .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate))
+                        .slice(0, 4);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert('Veuillez-vous connecter afin de voir le contenu de la page.');
+                });
         },
-        async fetchLatestActors() {
-            try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/actors');
-                const actors = response.data['hydra:member'];
-                actors.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                this.latestActors = actors.slice(0, 4);
-            } catch (error) {
-                console.error('Dernier ACTEURS : Error :', error);
-            }
-        }
+        fetchLatestActors() {
+            const token = localStorage.getItem('jwt_token'); // Récupérer le token du localStorage
+            axios.get("http://symfony.mmi-troyes.fr:8319/api/actors", {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Ajouter le token dans l'en-tête Authorization
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then((response) => {
+                    this.latestActors = response.data["hydra:member"]
+                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                        .slice(0, 4);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert('Veuillez-vous connecter afin de voir le contenu de la page.');
+                });
+        },
     }
 };
 </script>

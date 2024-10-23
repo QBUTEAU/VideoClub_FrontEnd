@@ -7,6 +7,9 @@
         </div>
 
         <div v-else>
+            <div class="back-button">
+                <button @click="goToActors">← Retour</button>
+            </div>
             <h2 class="about" v-if="actor">{{ getActorTitle(actor.gender) }} :</h2>
             <div class="actor__details" v-if="actor">
                 <div class="actor-details__img" :style="{ backgroundImage: 'url(' + actor.media + ')' }"></div>
@@ -63,23 +66,62 @@ export default {
         this.fetchActorDetails();
     },
     methods: {
+        getToken() {
+            return localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+        },
+        redirectToLogin() {
+            this.$router.push('/login'); // Redirection vers la page de login si pas de token
+        },
+        goToActors() {
+            this.$router.push('/actors'); // Redirige vers la page des acteurs
+        },
         async fetchActorDetails() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
+
             const actorId = this.$route.params.id;
             try {
-                const response = await axios.get(`http://symfony.mmi-troyes.fr:8319/api/actors/${actorId}`);
+                const response = await axios.get(`http://symfony.mmi-troyes.fr:8319/api/actors/${actorId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Ajout du token JWT dans les en-têtes
+                    }
+                });
                 this.actor = response.data;
-                this.fetchMovies(); // Récupérer les films de l'acteur
+                console.log('Actor details fetched:', this.actor); // Log for debugging
+                this.fetchMovies();
             } catch (error) {
                 console.error('Error fetching actor details:', error);
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin(); // Redirection si l'authentification échoue
+                }
             }
         },
         async fetchMovies() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
+
             if (this.actor.movies && this.actor.movies.length > 0) {
-                const moviePromises = this.actor.movies.map(url => axios.get(`http://symfony.mmi-troyes.fr:8319${url}`));
-                const movieResponses = await Promise.all(moviePromises);
-                this.movies = movieResponses
-                    .map(res => res.data)
-                    .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)); // Tri par date de sortie
+                try {
+                    const moviePromises = this.actor.movies.map(url =>
+                        axios.get(`http://symfony.mmi-troyes.fr:8319${url}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}` // Ajout du token JWT dans les en-têtes
+                            }
+                        })
+                    );
+                    const movieResponses = await Promise.all(moviePromises);
+                    this.movies = movieResponses.map(res => res.data);
+                    console.log('Movies fetched:', this.movies); // Log for debugging
+                    this.movies.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)); // Tri par date de sortie
+                } catch (error) {
+                    console.error('Error fetching movies:', error);
+                }
             } else {
                 this.movies = [];
             }
@@ -118,13 +160,27 @@ export default {
             }
         },
         async deleteActor() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
+
             try {
-                await axios.delete(`http://symfony.mmi-troyes.fr:8319/api/actors/${this.actor.id}`);
+                await axios.delete(`http://symfony.mmi-troyes.fr:8319/api/actors/${this.actor.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Ajout du token JWT dans les en-têtes
+                    }
+                });
                 alert(`L'acteur a bien été supprimé.`);
                 this.$router.push('/actors'); // Redirection vers la liste des acteurs
             } catch (error) {
                 console.error("Erreur lors de la suppression de l'acteur:", error);
-                alert("Une erreur s'est produite lors de la suppression de l'acteur.");
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin();
+                } else {
+                    alert("Une erreur s'est produite lors de la suppression de l'acteur.");
+                }
             }
         }
     }

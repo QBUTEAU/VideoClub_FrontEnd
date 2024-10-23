@@ -7,11 +7,10 @@ import MovieDetails from '@/views/MovieDetails.vue';
 import Categories from '@/views/Categories.vue';
 import CategoryDetails from '@/views/CategoryDetails.vue';
 import Login from '@/components/Login.vue';
-import auth from '@/services/auth';
 
 const routes = [
+    { path: '/', component: Home },
     { path: '/login', component: Login },
-    { path: '/', component: Home, meta: { requiresAuth: true } },
     { path: '/actors', component: Actors },
     { path: '/actor/:id', component: ActorDetails },
     { path: '/movies', component: Movies },
@@ -26,10 +25,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth) && !auth.isAuthenticated()) {
+    const isAuthenticated = !!localStorage.getItem('jwt_token'); // Vérifie si le token existe
+
+    // Redirigez vers /login si l'utilisateur n'est pas authentifié et essaie d'accéder à une route protégée
+    if (!isAuthenticated && to.path !== '/login') {
         next('/login');
     } else {
-        next();
+        next(); // Continuez vers la route demandée
     }
 });
 

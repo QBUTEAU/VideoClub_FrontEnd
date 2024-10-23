@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'EditMovie',
     props: {
@@ -49,11 +51,32 @@ export default {
         };
     },
     methods: {
-        submitForm() {
-            this.$emit('submit', this.localMovie); // Émettre les données modifiées vers le parent
+        async submitForm() {
+            const token = this.getToken(); // Get the JWT token
+
+            if (!token) {
+                this.redirectToLogin(); // Redirect to login if no token
+                return;
+            }
+
+            try {
+                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/movies/${this.movie.id}`, this.localMovie, {
+                    headers: { 'Authorization': `Bearer ${token}` } // Include the token in the request headers
+                });
+                this.$emit('submit', this.localMovie); // Emit the modified data to the parent
+            } catch (error) {
+                console.error('Error updating movie:', error);
+                alert('Une erreur est survenue lors de la modification du film.');
+            }
         },
         cancelEdit() {
-            this.$emit('cancel'); // Émettre l'annulation de l'édition
+            this.$emit('cancel'); // Emit the cancel event to the parent
+        },
+        getToken() {
+            return localStorage.getItem('jwt_token'); // Retrieve the JWT token from localStorage
+        },
+        redirectToLogin() {
+            this.$router.push('/login'); // Redirect to login if the token is not present
         },
     },
 };

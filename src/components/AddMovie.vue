@@ -64,8 +64,6 @@
     </div>
 </template>
 
-
-
 <script>
 import axios from 'axios';
 
@@ -83,12 +81,12 @@ export default {
                 description: '',
                 entries: null
             },
-            allCategories: [], // Stockage des catégories récupérées de l'API
-            selectedCategories: [], // Stockage des catégories sélectionnées
-            allActors: [], // Stockage des acteurs récupérés de l'API
-            selectedActors: [], // Stockage des acteurs sélectionnés
-            showCategoriesDropdown: false, // Contrôle de l'affichage du dropdown des catégories
-            showActorsDropdown: false // Contrôle de l'affichage du dropdown des acteurs
+            allCategories: [],
+            selectedCategories: [],
+            allActors: [],
+            selectedActors: [],
+            showCategoriesDropdown: false,
+            showActorsDropdown: false
         };
     },
     created() {
@@ -96,10 +94,27 @@ export default {
         this.fetchActors();
     },
     methods: {
+        // Récupérer le token depuis localStorage
+        getToken() {
+            return localStorage.getItem('jwt_token');
+        },
+        // Rediriger vers la page de connexion si le token n'est pas présent
+        redirectToLogin() {
+            this.$router.push('/login');
+        },
         // Récupérer les catégories depuis l'API
         async fetchCategories() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
             try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/categories');
+                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/categories', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.allCategories = response.data['hydra:member'];
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -107,8 +122,17 @@ export default {
         },
         // Récupérer les acteurs depuis l'API
         async fetchActors() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
             try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/actors');
+                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/actors', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.allActors = response.data['hydra:member'];
             } catch (error) {
                 console.error('Error fetching actors:', error);
@@ -116,6 +140,12 @@ export default {
         },
         // Ajouter un film
         async addMovie() {
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin();
+                return;
+            }
+
             const movieData = {
                 title: this.movie.title.trim(),
                 director: this.movie.director.trim(),
@@ -125,18 +155,22 @@ export default {
                 duration: this.movie.duration,
                 description: this.movie.description.trim(),
                 entries: this.movie.entries,
-                categories: this.selectedCategories, // Catégories sélectionnées
-                actors: this.selectedActors // Acteurs sélectionnés
+                categories: this.selectedCategories,
+                actors: this.selectedActors
             };
 
             try {
-                const response = await axios.post('http://symfony.mmi-troyes.fr:8319/api/movies', movieData);
+                const response = await axios.post('http://symfony.mmi-troyes.fr:8319/api/movies', movieData, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 console.log('Movie added successfully:', response.data);
 
                 const confirmation = confirm(`Le film ${movieData.title} a bien été ajouté.\nVoulez-vous continuer ?`);
                 if (confirmation) {
                     this.$emit('movie-added', response.data);
-                    this.resetForm();
+                    window.location.reload();
                 }
             } catch (error) {
                 console.error('Error adding movie:', error.response ? error.response.data : error);

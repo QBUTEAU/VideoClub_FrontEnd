@@ -54,27 +54,44 @@ export default {
         }
     },
     methods: {
-        // Génère la date actuelle au format yyyy-mm-dd
+        getToken() {
+            return localStorage.getItem('jwt_token'); // Récupérer le token depuis le localStorage
+        },
+        redirectToLogin() {
+            this.$router.push('/login'); // Redirection vers la page de login si pas de token
+        },
         getCurrentDate() {
             const today = new Date();
             const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Mois sur 2 chiffres
-            const dd = String(today.getDate()).padStart(2, '0'); // Jour sur 2 chiffres
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
             return `${yyyy}-${mm}-${dd}`;
         },
-        // Soumet le formulaire de modification avec la date du jour dans updatedAt
         async submitForm() {
             const actorId = this.actor.id;
-            // Ajouter la date actuelle dans updatedAt
             this.actor.updatedAt = this.getCurrentDate();
 
+            const token = this.getToken();
+            if (!token) {
+                this.redirectToLogin(); // Redirection si pas de token
+                return;
+            }
+
             try {
-                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/actors/${actorId}`, this.actor);
+                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/actors/${actorId}`, this.actor, {
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Ajout du token JWT dans les en-têtes
+                    }
+                });
                 alert('Les détails de l\'acteur ont été mis à jour avec succès.');
                 this.$emit('actor-updated', this.actor); // Émet l'événement pour notifier le parent
             } catch (error) {
                 console.error('Erreur lors de la mise à jour de l\'acteur :', error);
-                alert('Erreur lors de la mise à jour de l\'acteur.');
+                if (error.response && error.response.status === 401) {
+                    this.redirectToLogin(); // Redirection si l'authentification échoue
+                } else {
+                    alert('Erreur lors de la mise à jour de l\'acteur.');
+                }
             }
         }
     }

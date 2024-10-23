@@ -49,10 +49,20 @@ export default {
     methods: {
         async fetchCategories() {
             try {
-                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/categories?pagination=false');
+                const token = localStorage.getItem('jwt_token'); // Retrieve the token from local storage
+                const response = await axios.get('http://symfony.mmi-troyes.fr:8319/api/categories?pagination=false', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Set the Authorization header with the token
+                    }
+                });
                 this.categories = response.data['hydra:member'];
             } catch (error) {
                 console.error('Erreur lors de la récupération des catégories:', error);
+                // Handle token expiration or invalidation if necessary
+                if (error.response && error.response.status === 401) {
+                    alert('Votre session a expiré. Veuillez vous reconnecter.');
+                    this.$router.push('/login'); // Redirect to login if unauthorized
+                }
             }
         },
         handleCategoryAdded() {

@@ -16,23 +16,22 @@
         </div>
 
         <div v-if="!editMode">
+            <div class="back-button">
+                <button @click="goToCategories">← Retour</button>
+            </div>
             <h2>À propos du genre</h2>
-
             <div class="category__details" v-if="category">
-                <!-- Affichage des informations de la catégorie -->
                 <h3>{{ category.title }}</h3>
                 <p style="font-style: italic;">Ajouté le {{ formatDate(category.createdAt) }}<span
                         v-if="category.updatedAt"><br>
                         Mis à jour le {{ formatDate(category.updatedAt) }}</span></p>
 
                 <div class="crud">
-                    <!-- Icônes pour modifier ou supprimer la catégorie -->
                     <i class="fa-solid fa-pen-to-square" @click="toggleEditMode"></i>
                     <i class="fa-solid fa-trash" @click="confirmDeleteCategory"></i>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -57,11 +56,24 @@ export default {
         async fetchCategoryDetails() {
             const categoryId = this.$route.params.id;
             try {
-                const response = await axios.get(`http://symfony.mmi-troyes.fr:8319/api/categories/${categoryId}`);
+                const token = localStorage.getItem('jwt_token'); // Récupérer le token
+                const response = await axios.get(`http://symfony.mmi-troyes.fr:8319/api/categories/${categoryId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Ajouter le header Authorization
+                    }
+                });
                 this.category = response.data;
             } catch (error) {
                 console.error('Erreur lors de la récupération des détails de la catégorie :', error);
+                // Gérer l'expiration du token
+                if (error.response && error.response.status === 401) {
+                    alert('Votre session a expiré. Veuillez vous reconnecter.');
+                    this.$router.push('/login'); // Rediriger vers la page de connexion
+                }
             }
+        },
+        goToCategories() {
+            this.$router.push('/categories'); // Redirige vers la page des acteurs
         },
         formatDate(dateString) {
             return new Date(dateString).toLocaleDateString(undefined, {
@@ -70,7 +82,7 @@ export default {
                 day: 'numeric',
             });
         },
-        // Confirme la suppression de la catégorie sans vérifier les films liés
+        // Confirme la suppression de la catégorie
         async confirmDeleteCategory() {
             const confirmation = confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');
             if (confirmation) {
@@ -81,8 +93,12 @@ export default {
         async deleteCategory() {
             const categoryId = this.$route.params.id;
             try {
-                // Appel à l'API pour supprimer la catégorie
-                await axios.delete(`http://symfony.mmi-troyes.fr:8319/api/categories/${categoryId}`);
+                const token = localStorage.getItem('jwt_token'); // Récupérer le token
+                await axios.delete(`http://symfony.mmi-troyes.fr:8319/api/categories/${categoryId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Ajouter le header Authorization
+                    }
+                });
                 alert('Catégorie supprimée avec succès.');
                 this.$router.push('/categories'); // Redirige vers la liste des catégories après suppression
             } catch (error) {
@@ -102,14 +118,19 @@ export default {
             const dd = String(today.getDate()).padStart(2, '0'); // Jour sur 2 chiffres
             return `${yyyy}-${mm}-${dd}`;
         },
-        // Soumet le formulaire de modification avec la date du jour dans updatedAt
+        // Soumet le formulaire de modification
         async submitForm() {
             const categoryId = this.$route.params.id;
             // Ajouter la date actuelle dans updatedAt
             this.category.updatedAt = this.getCurrentDate();
 
             try {
-                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/categories/${categoryId}`, this.category);
+                const token = localStorage.getItem('jwt_token'); // Récupérer le token
+                await axios.put(`http://symfony.mmi-troyes.fr:8319/api/categories/${categoryId}`, this.category, {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Ajouter le header Authorization
+                    }
+                });
                 alert('Le genre a bien été modifié.');
                 this.editMode = false; // Sortir du mode édition après la modification
             } catch (error) {
