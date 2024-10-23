@@ -34,7 +34,7 @@ yarn install
 
 Wishing you good use!
 
-## Authors
+## Developer & Teacher
 - Quentin Buteau - B.U.T.3 MMI Student at IUT de Troyes
 - Minh 'Moshi' Thai - Freelance teacher in web development
 
