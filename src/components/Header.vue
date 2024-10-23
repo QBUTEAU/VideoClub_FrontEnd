@@ -2,10 +2,10 @@
     <header class="header">
         <nav>
             <ul>
-                <li><router-link to="/">Accueil</router-link></li>
-                <li><router-link to="/actors">Acteurs</router-link></li>
-                <li><router-link to="/movies">Films</router-link></li>
-                <li><router-link to="/categories">Catégories</router-link></li>
+                <li><router-link to="/">Home</router-link></li>
+                <li><router-link to="/actors">Actors</router-link></li>
+                <li><router-link to="/movies">Movies</router-link></li>
+                <li><router-link to="/categories">Categories</router-link></li>
             </ul>
         </nav>
         <div class="burger-icon" @click="toggleMenu">
@@ -22,16 +22,16 @@
             </ul>
         </div>
         <div class="profil-menu" v-if="isProfilePopupOpen">
-            <ul>
-                <li><router-link to="/edit-profile" @click="toggleProfilePopup">Edit Profil</router-link></li>
-                <li><router-link to="/logout" @click="toggleProfilePopup">Log Out</router-link></li>
-            </ul>
+            <a href="#" @click="logout">Log Out</a>
         </div>
     </header>
     <router-view></router-view>
 </template>
 
 <script>
+
+import auth from '@/services/auth';
+
 export default {
     data() {
         return {
@@ -45,7 +45,12 @@ export default {
         },
         toggleProfilePopup() {
             this.isProfilePopupOpen = !this.isProfilePopupOpen;
+        },
+        logout() {
+            auth.logout();
+            this.$router.push('/login');
         }
+
     }
 };
 </script>

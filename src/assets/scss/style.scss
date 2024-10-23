@@ -106,20 +106,11 @@ p {
     right: 20px;
     top: 100px;
     width: max-content;
+    padding: 15px 20px;
     text-align: right;
     background-color: black;
     border: 2px solid white;
     border-radius: 10px;
-
-    ul {
-        list-style: none;
-        padding: 10px 0;
-        margin: 0;
-
-        li {
-            padding: 15px 20px;
-        }
-    }
 
     a {
         color: white;
@@ -583,6 +574,47 @@ h3 {
 
     h3 {
         margin: 5px 0;
+    }
+}
+
+.dropdown {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+
+    .dropdown-toggle {
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        background-color: $white;
+        max-height: 250px;
+        overflow-y: auto;
+        width: 100%;
+        z-index: 1;
+        border-radius: 5px;
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        color: $black;
+        font-size: 13px;
+
+        input {
+            margin-right: 10px;
+        }
+
+        label {
+            margin: 0;
+        }
+
+        &::hover {
+            background-color: #f1f1f1;
+        }
     }
 }
 

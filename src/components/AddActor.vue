@@ -3,6 +3,7 @@
         <h2>Ajouter un acteur :</h2>
         <form class="form" @submit.prevent="addActor">
             <button type="button" @click="$emit('cancel')">Annuler</button>
+
             <label for="prenom">Prénom :</label>
             <input type="text" v-model="actor.firstname" placeholder="Prénom" />
 
@@ -28,18 +29,23 @@
                 <option value="F">F</option>
             </select>
 
+            <div class="dropdown">
+                <button class="dropdown-toggle" type="button" @click="toggleDropdown">
+                    Sélectionner les films
+                </button>
+                <div v-if="showDropdown" class="dropdown-menu">
+                    <div v-for="movie in films" :key="movie.id" class="dropdown-item">
+                        <input type="checkbox" :value="movie.id" :id="'movie-' + movie.id" v-model="selectedFilms" />
+                        <label :for="'movie-' + movie.id">{{ movie.title }}</label>
+                    </div>
+                </div>
+            </div>
+
             <label for="bio">Biographie :</label>
             <textarea v-model="actor.bio" placeholder="Cet acteur est blablabla..."></textarea>
 
             <label for="awards">Récompense(s) :</label>
             <input type="number" v-model="actor.awards" placeholder="Entre 0 et 10" min="0" max="10">
-
-            <label class="links-label" for="movies">Films :</label>
-            <select v-model="selectedFilms" multiple size="5">
-                <option v-for="movie in films" :key="movie.id" :value="movie.id">
-                    {{ movie.title }}
-                </option>
-            </select>
 
             <p>*ces champs doivent à tout prix être remplis</p>
 
@@ -53,11 +59,9 @@
 
 <script>
 import axios from 'axios';
-import Header from '@/components/Header.vue';
 
 export default {
     name: 'AddActor',
-    components: { Header },
     data() {
         return {
             actor: {
@@ -72,7 +76,8 @@ export default {
                 awards: 0
             },
             films: [],  // Liste des films disponibles
-            selectedFilms: []  // Liste des films sélectionnés
+            selectedFilms: [],  // Liste des films sélectionnés
+            showDropdown: false // Gérer l'affichage de la dropdown
         };
     },
     created() {
@@ -86,6 +91,10 @@ export default {
             } catch (error) {
                 console.error('Error fetching films:', error);
             }
+        },
+
+        toggleDropdown() {
+            this.showDropdown = !this.showDropdown;
         },
 
         async addActor() {
