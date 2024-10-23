@@ -1,4 +1,4 @@
-# WR505D - Advanced Frontend Developement | QBUTEAU
+# WR505D - Advanced Frontend Development | QBUTEAU
 
 ### Welcome to the repository for my submission for resource R5.DWeb-DI.05 !
 This repository corresponds to a projcet closely related to resource R5.DWeb-DI06 (Advanced Backend Development) and serves as the frontend for an application managing movies, actors and genres. It interacts with a backend API developed with **API Platform**. This part uses **Vue.js** to provide a dynamic and responsive UI.
@@ -36,6 +36,6 @@ Wishing you good use!
 
 ## Authors
 - Quentin Buteau - B.U.T.3 MMI Student at IUT de Troyes
-- Minh 'Moshi' Thai - Freelance teacher in web developement
+- Minh 'Moshi' Thai - Freelance teacher in web development
 
 ### &copy; 2024 - Quentin Buteau | All rights reserved
