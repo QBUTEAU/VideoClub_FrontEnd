@@ -41,7 +41,7 @@
                 </option>
             </select>
 
-            <p>*ce champs doit à tout prix être rempli</p>
+            <p>*ces champs doivent à tout prix être remplis</p>
 
             <div class="form__buttons">
                 <button type="submit">Ajouter</button>

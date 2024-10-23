@@ -25,6 +25,10 @@
             <label for="description">Synopsis :</label>
             <textarea v-model="movie.description" placeholder="Description du film"></textarea>
 
+            <label for="entries">Nombre d'entrées :</label>
+            <input type="number" v-model="movie.entries" placeholder="250000" />
+
+
             <!-- Remplacement des checkboxes par des selects -->
             <label for="categories">Catégories :</label>
             <select v-model="selectedCategories" multiple>
@@ -66,6 +70,7 @@ export default {
                 rating: null,
                 duration: null,
                 description: '',
+                entries: null
             },
             allCategories: [], // Pour stocker les catégories disponibles
             selectedCategories: [], // Pour les catégories sélectionnées
@@ -104,6 +109,7 @@ export default {
                 rating: this.movie.rating,
                 duration: this.movie.duration,
                 description: this.movie.description.trim(),
+                entries: this.movie.entries,
                 categories: this.selectedCategories, // Catégories sélectionnées
                 actors: this.selectedActors // Acteurs sélectionnés
             };
@@ -136,6 +142,7 @@ export default {
                 rating: null,
                 duration: null,
                 description: '',
+                entries: null
             };
             this.selectedCategories = [];
             this.selectedActors = [];

@@ -4,6 +4,9 @@
         <form class="form" @submit.prevent="submitForm">
             <label for="title">Titre:</label>
             <input type="text" v-model="category.title" required />
+
+            <p>*ce champs doit à tout prix être rempli</p>
+
             <div class="form__buttons">
                 <button type="submit">Ajouter</button>
                 <button type="button" @click="$emit('cancel')">Annuler</button>

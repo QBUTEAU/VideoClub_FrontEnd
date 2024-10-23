@@ -32,6 +32,8 @@
             <label for="awards">Récompenses :</label>
             <input type="number" v-model="actor.awards" min="0" max="10" />
 
+            <p>*ces champs doivent à tout prix être remplis</p>
+
             <div class="form__buttons">
                 <button type="submit">Modifier</button>
                 <button type="button" @click="$emit('cancel')">Annuler</button>

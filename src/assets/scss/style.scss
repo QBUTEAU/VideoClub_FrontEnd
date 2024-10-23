@@ -85,7 +85,7 @@ p {
 }
 
 .profil {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 20px;
     padding: 15px;
@@ -93,6 +93,7 @@ p {
     color: white;
     border-radius: 10px;
     border: 2px white solid;
+    cursor: pointer;
 
     i {
         font-size: 20px;
@@ -105,6 +106,7 @@ p {
     right: 20px;
     top: 100px;
     width: max-content;
+    text-align: right;
     background-color: black;
     border: 2px solid white;
     border-radius: 10px;
@@ -571,7 +573,7 @@ h3 {
     margin: 0 auto;
     padding: 15px;
     background-color: $black;
-    max-width: 200px;
+    width: max-content;
     border-radius: 10px;
     border: 2px $white solid;
 
