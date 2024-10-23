@@ -23,9 +23,9 @@ yarn install
 ```
 
 ## Useful commands
-`npm run dev` / `yarn run` : Starts the local development server
-`npm run build` / `yarn build` : Builds the application for production
-`npm run lint` / `yarn lint` : Lints and fixes the code based on defined coding rules.
+- `npm run dev` / `yarn run` : Starts the local development server
+- `npm run build` / `yarn build` : Builds the application for production
+- `npm run lint` / `yarn lint` : Lints and fixes the code based on defined coding rules.
 
 ## Authentication
 ⚠️ After running the project (with `npm run dev` and redirect to `http://localhost:5173`), you'll need to log in to access to the project :
