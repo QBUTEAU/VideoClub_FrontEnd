@@ -36,6 +36,6 @@ Wishing you good use!
 
 ## Authors
 - Quentin Buteau - B.U.T.3 MMI Student at IUT de Troyes
-- Mihn 'Moshi' Thai - Freelance teacher in web developement
+- Minh 'Moshi' Thai - Freelance teacher in web developement
 
 ### &copy; 2024 - Quentin Buteau | All rights reserved
