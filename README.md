@@ -1,6 +1,6 @@
 # WR505D - Développement Front Avancé | QBUTEAU
 
-### Bienvenue dans le dépôt pour ma soumission de la ressource R5.DWeb-DI.05 !
+### Bienvenue dans le dépôt pour mon rendu de la ressource R5.DWeb-DI.05 !
 Ce dépôt correspond à un projet étroitement lié à la ressource R5.DWeb-DI06 (Développement Back Avancé) et sert de frontend pour une application gérant des films, acteurs et genres. Il interagit avec une API de backend développée avec **API Platform**. Cette partie utilise **Vue.js** pour fournir une interface utilisateur dynamique et réactive.
 
 ## ⚠️ Authentification
@@ -34,7 +34,7 @@ yarn install
 - `npm run lint` / `yarn lint` : Raie et corrige le code en fonction de règles de codage définies.
 
 
-Vous souhaitant bonne utilisation!
+En vous souhaitant bonne utilisation !
 
 ## Développeur et enseignant
 - Quentin Buteau - Étudiant en B.U.T.3 MMI à l’IUT de Troyes
