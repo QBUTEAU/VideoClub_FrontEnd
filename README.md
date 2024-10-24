@@ -7,7 +7,7 @@ Ce référentiel correspond à un projcet étroitement lié à la ressource R5.D
 ⚠️ Après avoir récupéré la partie Back du projet et lancer le projet côté Front, vous devrez vous connecter pour accéder au projet :
 - Courriel : `qbuteau@mmi.fr`
 - Mot de passe : `WR505D`
-<br><br>**Ces identifiants sont prédéfinis dans le AppFixtures.php du projet ([WR506D(https://github.com/QBUTEAU/WR506D)]) après avoir fait la commande `php bin/console doctrine:fixtures:load`**
+<br><br>**Ces identifiants sont prédéfinis dans le AppFixtures.php du projet ([WR506D](https://github.com/QBUTEAU/WR506D)) après avoir fait la commande `php bin/console doctrine:fixtures:load`**
 
 # Prérequis
 - **Node.js**
