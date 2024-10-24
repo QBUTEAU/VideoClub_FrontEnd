@@ -16,10 +16,10 @@ Ce référentiel correspond à un projcet étroitement lié à la ressource R5.D
 
 # # Étapes d’installation
 ### 1. Cloner le dépôt
-``
+```
 git clone https://github.com/QBUTEAU/WR505D.git
 cd votre dossier
-``
+```
 
 ### 2. Installer les dépendances
 ```
