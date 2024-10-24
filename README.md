@@ -1,7 +1,7 @@
 # WR505D - Développement Front Avancé | QBUTEAU
 
 ### Bienvenue dans le dépôt pour ma soumission de la ressource R5.DWeb-DI.05 !
-Ce référentiel correspond à un projcet étroitement lié à la ressource R5.DWeb-DI06 (Développement Back Avancé) et sert de frontend pour une application gérant des films, acteurs et genres. Il interagit avec une API de backend développée avec **API Platform**. Cette partie utilise **Vue.js** pour fournir une interface utilisateur dynamique et réactive.
+Ce dépôt correspond à un projet étroitement lié à la ressource R5.DWeb-DI06 (Développement Back Avancé) et sert de frontend pour une application gérant des films, acteurs et genres. Il interagit avec une API de backend développée avec **API Platform**. Cette partie utilise **Vue.js** pour fournir une interface utilisateur dynamique et réactive.
 
 ## ⚠️ Authentification
 ⚠️ Après avoir récupéré la partie Back du projet et lancer le projet côté Front, vous devrez vous connecter pour accéder au projet :
@@ -11,7 +11,7 @@ Ce référentiel correspond à un projcet étroitement lié à la ressource R5.D
 
 # Prérequis
 - **Node.js**
-- **npm** ou **fil**
+- **npm** ou **yarn**
 - **Git**
 
 # # Étapes d’installation
