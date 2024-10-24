@@ -14,7 +14,7 @@ Ce dépôt correspond à un projet étroitement lié à la ressource R5.DWeb-DI0
 - **npm** ou **yarn**
 - **Git**
 
-# # Étapes d’installation
+## Étapes d’installation
 ### 1. Cloner le dépôt
 ```
 git clone https://github.com/QBUTEAU/WR505D.git
