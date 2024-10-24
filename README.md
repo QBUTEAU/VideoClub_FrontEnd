@@ -1,41 +1,43 @@
-# WR505D - Advanced Frontend Development | QBUTEAU
+# WR505D - Développement Front Avancé | QBUTEAU
 
-### Welcome to the repository for my submission for resource R5.DWeb-DI.05 !
-This repository corresponds to a projcet closely related to resource R5.DWeb-DI06 (Advanced Backend Development) and serves as the frontend for an application managing movies, actors and genres. It interacts with a backend API developed with **API Platform**. This part uses **Vue.js** to provide a dynamic and responsive UI.
+### Bienvenue dans le dépôt pour ma soumission de la ressource R5.DWeb-DI.05 !
+Ce référentiel correspond à un projcet étroitement lié à la ressource R5.DWeb-DI06 (Développement Back Avancé) et sert de frontend pour une application gérant des films, acteurs et genres. Il interagit avec une API de backend développée avec **API Platform**. Cette partie utilise **Vue.js** pour fournir une interface utilisateur dynamique et réactive.
 
-## Prerequisites
+## ⚠️ Authentification
+⚠️ Après avoir récupéré la partie Back du projet et lancer le projet côté Front, vous devrez vous connecter pour accéder au projet :
+- Courriel : ‘qbuteau@mmi.fr’
+- Mot de passe : `WR505D`
+**Ces identifiants sont prédéfinis dans le AppFixtures.php du projet (WR506D[https://github.com/QBUTEAU/WR506D]) après avoir fait la commande `php bin/console doctrine:fixtures:load`**
+
+# Prérequis
 - **Node.js**
-- **npm** or **yarn**
+- **npm** ou **fil**
 - **Git**
 
-## Installation steps
-### 1. Clone the repository
-```
+# # Étapes d’installation
+### 1. Cloner le dépôt
+``
 git clone https://github.com/QBUTEAU/WR505D.git
-cd your-folder
-```
+cd votre dossier
+``
 
-### 2. Install dependencies
-```
+### 2. Installer les dépendances
+``
 npm install
-# or
+# ou
 yarn install
-```
+``
 
-## Useful commands
-- `npm run dev` / `yarn run` : Starts the local development server
-- `npm run build` / `yarn build` : Builds the application for production
-- `npm run lint` / `yarn lint` : Lints and fixes the code based on defined coding rules.
+## Commandes utiles
+- ‘npm run dev’ / ‘yarn run’ : Démarre le serveur de développement local
+- ‘npm run build’ / ‘yarn build’ : Compile l’application pour la production
+- ‘npm run lint’ / ‘yarn lint’ : Raie et corrige le code en fonction de règles de codage définies.
 
-## Authentication
-⚠️ After running the project (with `npm run dev` and redirect to `http://localhost:5173`), you'll need to log in to access to the project :
-- Username : `admin`
-- Password : `wr505d`
 
-Wishing you good use!
+Vous souhaitant bonne utilisation!
 
-## Developer & Teacher
-- Quentin Buteau - B.U.T.3 MMI Student at IUT de Troyes
-- Minh 'Moshi' Thai - Freelance teacher in web development
+## Développeur et enseignant
+- Quentin Buteau - Étudiant en B.U.T.3 MMI à l’IUT de Troyes
+- Minh 'Moshi' Thai - Enseignant vacataire et Développeur Full-Stack
 
-### &copy; 2024 - Quentin Buteau | All rights reserved
+### &copy; 2024 - Quentin Buteau | Tous droits réservés
