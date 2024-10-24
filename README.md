@@ -22,16 +22,16 @@ cd votre dossier
 ``
 
 ### 2. Installer les dépendances
-``
+```
 npm install
 # ou
 yarn install
-``
+```
 
 ## Commandes utiles
-- ‘npm run dev’ / ‘yarn run’ : Démarre le serveur de développement local
-- ‘npm run build’ / ‘yarn build’ : Compile l’application pour la production
-- ‘npm run lint’ / ‘yarn lint’ : Raie et corrige le code en fonction de règles de codage définies.
+- `npm run dev` / `yarn run` : Démarre le serveur de développement local
+- `npm run build` / `yarn build` : Compile l’application pour la production
+- `npm run lint` / `yarn lint` : Raie et corrige le code en fonction de règles de codage définies.
 
 
 Vous souhaitant bonne utilisation!
