@@ -14,7 +14,7 @@ Ce dépôt correspond à un projet étroitement lié à la ressource R5.DWeb-DI0
 - **npm** ou **yarn**
 - **Git**
 
-## Étapes d’installation
+# Étapes d’installation
 ### 1. Cloner le dépôt
 ```
 git clone https://github.com/QBUTEAU/WR505D.git
@@ -28,7 +28,7 @@ npm install
 yarn install
 ```
 
-## Commandes utiles
+# Commandes utiles
 - `npm run dev` / `yarn run` : Démarre le serveur de développement local
 - `npm run build` / `yarn build` : Compile l’application pour la production
 - `npm run lint` / `yarn lint` : Raie et corrige le code en fonction de règles de codage définies.
