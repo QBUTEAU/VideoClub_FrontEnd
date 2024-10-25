@@ -7,7 +7,7 @@ Ce dépôt correspond à un projet étroitement lié à la ressource R5.DWeb-DI0
 ⚠️ Après avoir également récupéré la partie Back du projet et lancé le projet côté Front, vous devrez vous connecter pour accéder au projet :
 - Adresse mail : `qbuteau@mmi.fr`
 - Mot de passe : `WR505D`
-<br><br>**Ces identifiants sont prédéfinis dans le AppFixtures.php du projet [WR506D](https://github.com/QBUTEAU/WR506D) après avoir fait la commande `php bin/console doctrine:fixtures:load` qui créée le user dans la BDD.**
+<br><br>**Ces identifiants sont prédéfinis dans le AppFixtures.php du projet [WR506D](https://github.com/QBUTEAU/WR506D), à récuperer dans la branche `develop` après avoir fait la commande `php bin/console doctrine:fixtures:load` qui créée le user dans la BDD.**
 
 # Prérequis
 - **Node.js**
