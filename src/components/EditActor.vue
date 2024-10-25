@@ -3,7 +3,7 @@
         <h2>Modifier :</h2>
         <form class="form" @submit.prevent="submitForm">
             <label for="firstname">Prénom :</label>
-            <input type="text" v-model="actor.firstname" required />
+            <input type="text" v-model="actor.firstname" />
 
             <label for="lastname">Nom :<span>*</span></label>
             <input type="text" v-model="actor.lastname" required />

@@ -3,16 +3,19 @@
         <Header />
         <AddCategory v-if="showAddCategoryForm" @category-added="handleCategoryAdded" @cancel="toggleAddCategoryForm" />
 
-        <h2>Voici la liste des genres :</h2>
-        <div class="search-add">
-            <input type="text" v-model="searchTerm" placeholder="Rechercher un genre..." class="search-bar" />
-            <button @click="toggleAddCategoryForm" class="add-actor">
-                <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>AJOUTER UN GENRE
-            </button>
-        </div>
+        <div v-else>
+            <h2>Voici la liste des genres :</h2>
+            <div class="search-add">
+                <input type="text" v-model="searchTerm" placeholder="Rechercher un genre..." class="search-bar" />
+                <button @click="toggleAddCategoryForm" class="add-actor">
+                    <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>AJOUTER UN GENRE
+                </button>
+            </div>
 
-        <div class="categories">
-            <CategoryCard v-for="category in filteredCategories" :key="category.id" :category="category" />
+            <div class="categories">
+                <CategoryCard v-for="category in filteredCategories" :key="category.id" :category="category" />
+            </div>
+
         </div>
     </div>
 </template>
