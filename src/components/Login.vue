@@ -3,10 +3,10 @@
         <h2>Connexion</h2>
         <form class="form" @submit.prevent="login">
             <label for="email">Email :</label>
-            <input type="email" v-model="email" required />
+            <input type="email" v-model="email" placeholder="qbuteau@mmi.fr" required />
 
             <label for="password">Mot de passe :</label>
-            <input type="password" v-model="password" required />
+            <input type="password" v-model="password" placeholder="WR505D" required />
 
             <button type="submit">Se connecter</button>
         </form>
