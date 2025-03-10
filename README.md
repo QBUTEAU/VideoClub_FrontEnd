@@ -17,8 +17,8 @@ Ce dépôt correspond à un projet étroitement lié à la ressource R5.DWeb-DI0
 # Étapes d’installation
 ### 1. Cloner le dépôt
 ```
-git clone https://github.com/QBUTEAU/WR505D.git
-cd votre dossier
+git clone https://github.com/QBUTEAU/VideoCLub_FrontEnd.git
+cd VideoClub_FrontEnd
 ```
 
 ### 2. Installer les dépendances
